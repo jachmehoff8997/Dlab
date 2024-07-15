@@ -1,0 +1,41 @@
+1.cifr-10
+import tensorflow as tf
+from tensorflow.keras import datasets, layers, models
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load and preprocess CIFAR-10 dataset
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+# Define and compile the model
+model = models.Sequential([
+    layers.Flatten(input_shape=(32, 32, 3)),
+    layers.Dense(512, activation='relu'),
+    layers.Dense(10, activation='softmax')
+])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Train the model
+model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+# Evaluate the model
+loss, accuracy = model.evaluate(x_test, y_test)
+print(f'Test accuracy: {accuracy:.4f}')
+
+# Visualize predictions
+class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+predictions = model.predict(x_test[:9])
+
+plt.figure(figsize=(10, 10))
+for i in range(9):
+    plt.subplot(3, 3, i + 1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(x_test[i])
+    pred_label = np.argmax(predictions[i])
+    true_label = y_test[i][0]
+    color = 'blue' if pred_label == true_label else 'red'
+    plt.xlabel(f"{class_names[pred_label]} ({class_names[true_label]})", color=color)
+plt.show()

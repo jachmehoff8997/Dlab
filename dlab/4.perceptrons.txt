@@ -1,0 +1,46 @@
+4.perceptrons
+class Perceptron:
+    def __init__(self, weights, bias, learning_rate=0.1):
+        self.weights = weights
+        self.bias = bias
+        self.learning_rate = learning_rate
+
+    def predict(self, inputs):
+        summation = sum(w * i for w, i in zip(self.weights, inputs)) + self.bias
+        return 1 if summation > 0 else 0
+
+    def train(self, training_data, epochs):
+        for _ in range(epochs):
+            for inputs, expected in training_data:
+                prediction = self.predict(inputs)
+                error = expected - prediction
+                self.weights = [w + self.learning_rate * error * i for w, i in zip(self.weights, inputs)]
+                self.bias += self.learning_rate * error
+
+# Initial weights and bias
+weights = [0.2, 0.4, 0.2]
+bias = -0.5
+
+# Create Perceptron instance
+perceptron = Perceptron(weights, bias)
+
+# Example training data (inputs, expected_output)
+training_data = [
+    ([1, 0, 1], 1),
+    ([0, 1, 1], 0),
+    ([1, 1, 0], 1),
+    ([0, 0, 0], 0),
+]
+
+# Train the perceptron
+perceptron.train(training_data, epochs=10)
+
+# Make prediction
+inputs = [1, 0, 1]  # Example input where Favorite hero=True, Exam=False, Climate=True
+output = perceptron.predict(inputs)
+print("Decision to go for a movie:", "Yes" if output == 1 else "No")
+
+# Calculate accuracy
+correct_predictions = sum(perceptron.predict(inputs) == label for inputs, label in training_data)
+accuracy = correct_predictions / len(training_data)
+print("Accuracy:", accuracy)

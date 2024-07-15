@@ -1,0 +1,43 @@
+3.image generator
+   import cv2
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
+
+def display_image(title, image):
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title(title)
+    plt.axis('off')
+    plt.show()
+
+# Load an example image
+image = cv2.imread('/vinland.jpg')
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Histogram Equalization
+equalized_image = cv2.equalizeHist(gray_image)
+display_image('Histogram Equalization', equalized_image)
+
+# Thresholding
+_, thresholded_image = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
+display_image('Thresholding', thresholded_image)
+
+# Edge Detection using Canny
+edges = cv2.Canny(image, 100, 200)
+display_image('Edge Detection', edges)
+
+# Data Augmentation
+datagen = ImageDataGenerator(rotation_range=40, width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2, zoom_range=0.2, horizontal_flip=True, fill_mode='nearest')
+img_array = np.expand_dims(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), axis=0)
+aug_iter = datagen.flow(img_array)
+
+# Generate and display augmented images
+for i in range(2):
+    aug_image = next(aug_iter)[0].astype('uint8')
+    display_image(f'Augmentation {i+1}', aug_image)
+
+# Morphological Operations
+kernel = np.ones((5, 5), np.uint8)
+morph_image = cv2.morphologyEx(thresholded_image, cv2.MORPH_GRADIENT, kernel)
+display_image('Morphological Operation', morph_image)

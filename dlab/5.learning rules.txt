@@ -1,0 +1,33 @@
+5.learning rules
+import numpy as np
+# Hebbian Learning Rule
+def hebbian_learning_rule(input_pattern, weight_matrix):
+    return weight_matrix + np.outer(input_pattern, input_pattern)
+# Perceptron Learning Rule
+def perceptron_learning_rule(input_pattern, target, weight_vector, learning_rate):
+    prediction = np.dot(weight_vector, input_pattern)
+    error = target - prediction
+    return weight_vector + learning_rate * error * input_pattern
+# Delta Learning Rule
+def delta_learning_rule(input_pattern, target, weight_matrix, learning_rate):
+    prediction = np.dot(weight_matrix, input_pattern)
+    error = target - prediction
+    return weight_matrix + learning_rate * np.outer(error, input_pattern)
+# Correlation Learning Rule
+def correlation_learning_rule(input_pattern, weight_matrix):
+    return weight_matrix + np.outer(input_pattern, input_pattern)
+# Out Star Learning Rule
+def out_star_learning_rule(input_pattern, weight_matrix, learning_rate):
+    return weight_matrix + learning_rate * np.outer(input_pattern, input_pattern)
+input_size = 3
+# Initialize weights with random values
+hebbian_weights = np.random.rand(input_size, input_size)
+perceptron_weights = np.random.rand(input_size)
+delta_weights = np.random.rand(input_size, input_size)
+correlation_weights = np.random.rand(input_size, input_size)
+out_star_weights = np.random.rand(input_size, input_size)
+print("Hebbian Weights:",hebbian_weights)
+print("\nPerceptron Weights:",perceptron_weights)
+print("\nDelta Weights:",delta_weights)
+print("\nCorrelation Weights:",correlation_weights)
+print("\nOut Star Weights:",out_star_weights)
